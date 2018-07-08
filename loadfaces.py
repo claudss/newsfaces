@@ -50,7 +50,6 @@ class FaceData(Dataset):
         img_name = os.path.join(self.root_dir,
                                 filelist[idx])
         image = io.imread(img_name)
-        print ("IMG NAME: " + img_name)
         sample = {'image': image}
         if self.transform:
             sample = self.transform(sample)
@@ -61,90 +60,88 @@ class FaceData(Dataset):
         filelist.sort()
         img_name = os.path.join(self.root_dir, filelist[idx])
         return img_name
-    
-    
-class Crop(object):
-    """Crop the images from our face data into desired dimensions
+
+class CenterCrop(object):
+    """Crops the image to the center/face region for better processing.
 
     Args:
         output_size (tuple or int): Desired output size. If int, square crop
             is made.
     """
+
     def __init__(self, output_size):
-            assert isinstance(output_size, (int, tuple))
-            if isinstance(output_size, int):
-                self.output_size = (output_size, output_size)
-            else:
-                assert len(output_size) == 2
-                self.output_size = output_size
-                
+        assert isinstance(output_size, (int, tuple))
+        if isinstance(output_size, int):
+            self.output_size = (output_size, output_size)
+        else:
+            assert len(output_size) == 2
+            self.output_size = output_size
+
     def __call__(self, sample):
         image = sample['image']
 
         h, w = image.shape[:2]
         new_h, new_w = self.output_size
 
-        top = np.random.randint(0, h - new_h)
-        left = np.random.randint(0, w - new_w)
+        top = (h - new_h)//2
+        left = (w - new_w)//2
 
         image = image[top: top + new_h,
                       left: left + new_w]
 
         return {'image': image}
-    
-crop = Crop(125)
 
-    
-    
-    
 rootpath = 'aligned-faces-matlab/'
 face_dataset = FaceData(root_dir=rootpath)
+crop = CenterCrop(275)
 
-fig = plt.figure()
-
+# simple for loop to crop all images
 for i in range(len(face_dataset)):
-    if i % 2 == 1:
-        sample = face_dataset[i]
+    fig = plt.figure()
+    sample = face_dataset[i]
+    croppedsample = crop(sample)
     
-        print(i, sample['image'].shape)
+    ax = plt.axes([0,0,1,1])
+    plt.tight_layout()
+    #ax.set_title(type(crop).__name__)
+    ax.axis('off')
+    plt.imshow(croppedsample['image'])
+    plt.pause(0.001)
+    #plt.subplots_adjust(top = 1, bottom = 0, right = 1, left = 0, hspace = 0, wspace = 0)
+    plt.show()
     
-        #ax = plt.subplot(1, 1, i + 1)
-        plt.tight_layout()
-        ax.set_title('Sample #{}'.format(i))
-        img=mpimg.imread(face_dataset.__getpath__(i))
-        imgplot = plt.imshow(img)
-        ax.axis('off')
-        plt.show()
-        
-    if i == 8:
-        break
+    fig.savefig('cropped/' + face_dataset.__getpath__(i)[20:], bbox_inches='tight', pad_inches=0, fix_aspect='false')
     
 
-fig = plt.figure()
-ax = plt.subplot(1, 1, 1)
-sample = face_dataset[65]
-cropped_sample = crop(sample)
-img=mpimg.imread(face_dataset.__getpath__(65))
-imgplot = plt.imshow(img)
-plt.tight_layout()
-ax.set_title(type(crop).__name__)
-plt.show()
 
 """
-sample = face_dataset[0]
+# Attempt at using proper dataloading in pytorch to crop all images
+crop = CenterCrop(275)
+cropped = FaceData(root_dir=rootpath, transform=CenterCrop(275))
+dataloader = DataLoader(cropped, batch_size=4,
+                        shuffle=True, num_workers=4)
 
 
-print(0, sample['image'].shape)
+def show_batch(sample_batched):
+    #Show image with landmarks for a batch of samples
+    images_batch = sample_batched['image']
+    batch_size = len(images_batch)
+    im_size = images_batch.size(2)
 
-ax = plt.subplot(1, 1, 1)
-plt.tight_layout()
-i = 1
-ax.set_title('Sample #{}'.format(i))
-img=mpimg.imread(face_dataset.__getpath__(i))
-imgplot = plt.imshow(img)
-ax.axis('off')
-plt.show()
+    grid = utils.make_grid(images_batch)
+    plt.imshow(grid.numpy().transpose((1, 2, 0)))
 
 
-
+for ib, bsample in enumerate(dataloader):
+    print(ib, bsample['image'].size())
+    plt.figure()
+    show_batch(bsample)
+    #ax = plt.axes([0,0,1,1])
+    #plt.tight_layout()
+    #ax.set_title(type(crop).__name__)
+    #ax.axis('off')
+    #plt.imshow(dataloader['image'])
+    #plt.pause(0.001)
+    #plt.show()
+    #fig.savefig('cropped/' + face_dataset.__getpath__(ib)[20:], bbox_inches='tight', pad_inches=0, fix_aspect='false')
 """
