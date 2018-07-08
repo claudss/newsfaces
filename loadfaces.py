@@ -97,20 +97,21 @@ crop = CenterCrop(275)
 
 # simple for loop to crop all images
 for i in range(len(face_dataset)):
-    fig = plt.figure()
-    sample = face_dataset[i]
-    croppedsample = crop(sample)
-    
-    ax = plt.axes([0,0,1,1])
-    plt.tight_layout()
-    #ax.set_title(type(crop).__name__)
-    ax.axis('off')
-    plt.imshow(croppedsample['image'])
-    plt.pause(0.001)
-    #plt.subplots_adjust(top = 1, bottom = 0, right = 1, left = 0, hspace = 0, wspace = 0)
-    plt.show()
-    
-    fig.savefig('cropped/' + face_dataset.__getpath__(i)[20:], bbox_inches='tight', pad_inches=0, fix_aspect='false')
+    if (".dt" not in face_dataset.__getpath__(i)):
+        fig = plt.figure()
+        sample = face_dataset[i]
+        croppedsample = crop(sample)
+        
+        ax = plt.axes([0,0,1,1])
+        plt.tight_layout()
+        #ax.set_title(type(crop).__name__)
+        ax.axis('off')
+        plt.imshow(croppedsample['image'])
+        plt.pause(0.001)
+        #plt.subplots_adjust(top = 1, bottom = 0, right = 1, left = 0, hspace = 0, wspace = 0)
+        plt.show()
+        
+        fig.savefig('cropped/' + face_dataset.__getpath__(i)[20:], bbox_inches='tight', pad_inches=0, fix_aspect='false')
     
 
 
