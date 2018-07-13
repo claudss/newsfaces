@@ -17,7 +17,7 @@ def extract_features(img_path):
     """Exctract 128 dimensional features
     """
     X_img = face_recognition.load_image_file(img_path)
-    locs = face_locations(X_img, number_of_times_to_upsample = N_UPSCLAE)
+    locs = face_locations(X_img, number_of_times_to_upsample = N_UPSCLAE, model="cnn")
     if len(locs) == 0:
         return None, None
     face_encodings = face_recognition.face_encodings(X_img, known_face_locations=locs)

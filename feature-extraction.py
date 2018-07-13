@@ -48,7 +48,7 @@ def main():
         img_path = os.path.join(data_dir, fname)
         # face detection
         X_img = face_recognition.load_image_file(img_path)
-        X_faces_loc = face_locations(X_img)
+        X_faces_loc = face_locations(X_img, model="cnn")
         # if the number of faces detected in a image is not 1, ignore the image
         if len(X_faces_loc) != 1:
             continue
