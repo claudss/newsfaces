@@ -10,14 +10,18 @@ This project is based heavily on this [face classification one](https://github.c
   * scikit-learn (`pip install scikit-learn`)
   
   Once these are installed, what remains is downloading a dataset to train on. For more general work, the LFWA+ dataset can be used. However, any directory can be used for training. In my particular case, I used a custom setup of newscasters' faces, found in the `cropped` folder.
-  
+
+##### Feature Extraction
+```bash
+python2 feature-extraction.py --data_dir cropped/ --save_feature feature.csv --save_label label.csv
+```
   
 #### Model Training
 ```bash
-python train.py --feature features.csv --label label.csv --save_model face_model.pkl
+python2 train.py --feature features.csv --label label.csv --save_model face_model.pkl
 ```
 
 #### Prediction
 Classify face attributes in test directory based on the training from above.
 ```bash
-python pred.py --img_dir test/ --model face_model.pkl
+python2 pred.py --img_dir test/ --model face_model.pkl
