@@ -14,70 +14,130 @@ imagepath = "cropped_train/"
 filelist = os.listdir(imagepath)
 filelist.sort()
 
-firsts =[]
+firsts = []
 lasts = []
 
-with open('attribs_uncut.csv', 'r') as csvfile:
-    spamreader = csv.reader(csvfile, delimiter='"')
-    for row in spamreader:
-        thisrow = row[0].split(",")
-        lasts.append(thisrow[0])
-        firsts.append(thisrow[1])
-        #print (thisrow)
-
-found=0
-finalf = []
-finall = []
 matches = []
-for file in filelist:
-    for f, l in zip(firsts, lasts):
-        if file.find(f) > 0 and file.find(l) > 0:
-            print("File " + file + " has a match in our CSV!")
-            matches.append(file)
-            finalf.append(f)
-            finall.append(l)
-            found += 1
-            
-outrows = []
-with open('attribs_uncut.csv', 'r') as csvfile:
-    spamreader = csv.reader(csvfile, delimiter='"')
-    for row in spamreader:
-        thisrow = row[0].split(",")
-        for f, l in zip(finalf, finall):
-            if (thisrow[0] == l) and (thisrow[1] == f) and thisrow not in outrows:
-                outrows.append(thisrow)
-                #print (thisrow)
+imgnames = []
 
-with open('label.csv','w') as csvout:
-    writer = csv.writer(csvout)
-    writer.writerow(['LastName','FirstName', 'Recall', 'PositiveRating', 'PerfRatio', 'Impact'])
-    for r in outrows:
-        #print("Row " + str(r) + " written successfully.")
-        writer.writerow(r)
-
-        
-foutrows = []
-with open('feature.csv', 'r') as featin:
-    reader = csv.reader(featin, delimiter='"')
+numfiles = 0
+with open('train_feature.csv', 'r') as featread:
+    reader = csv.reader(featread, delimiter='"')
     for row in reader:
         thisrow = row[0].split(",")
-        #print ("Thisrow[0]: " + thisrow[0])
-        if thisrow[0] in filelist:
-            for f, l in zip(finalf, finall):
-                if f in thisrow[0] and l in thisrow[0]:
-                    if thisrow not in foutrows:
-                        foutrows.append(thisrow)
-                        print("Row " + str(thisrow) + " to be written.")
-
-toprow = [''] + list(range(0, 128))
-foutrows.sort()
-with open('features.csv', 'w') as featout:
-    writer = csv.writer(featout, delimiter=',')
-    writer.writerow(toprow)
-    for r in foutrows:
-        print ("Row " + str(r) + " written successfully.")
-        writer.writerow(r)
-
+        imgnames.append(thisrow[0])
+        #print("TESTING NAME: " + thisrow[0])
+        numfiles += 1
         
-print("Amount of images available: " + str(len(filelist) ))
+print("AMOUNT OF FILES TO FIND LABELS FOR : " + str(numfiles))
+
+names = []
+lout = []
+with open('attribs_uncut.csv', 'r') as csvfile:
+    spamreader = csv.reader(csvfile, delimiter=',')
+    index = 0
+    count = 0
+    for row in spamreader:
+        #print("CURRENT INDEX: " + str(index) + " IS NOT IN " + str((index in indices)))
+        if (index < 1411):
+            
+            lasts.append(row[0].strip())
+            firsts.append(row[1].strip())
+            fullname = str(row[1].strip() + "_" + row[0].strip())
+            names.append(fullname)
+            for imgn in imgnames:
+                if fullname in imgn:
+                    #print("NAME " + fullname + " IS IN " + imgn + " AT INDEX " + str(index))
+                    lout.append(row[-4:])
+                    #print("APPENDING " + str(row[-4:]) + " TO LOUT")
+                    count += 1
+                    imgnames.remove(imgn)
+                    break
+        index += 1
+       # print (thisrow)
+    print("FINAL AMOUNT OF INDICES SEEN: " + str(count))
+"""
+for f in filelist:
+    imgnames.append(f)
+    cur = f.split("-")[0]
+    matches.append(int(cur))
+    #print("MATCH OF " + str(f) + ": " + str(int(cur)))
+
+with open('features.csv', 'r') as csvfile:
+    spamreader = csv.reader(csvfile, delimiter='"')
+    for row in spamreader:
+        
+        thisrow = row[0].split(",")
+        print("img name: " + str(thisrow[0]))
+       
+
+#imgnames.sort()
+print("How many images on file? " + str(len(imgnames)))
+matches.sort()
+
+names = []
+lout = []
+with open('attribs_uncut.csv', 'r') as csvfile:
+    spamreader = csv.reader(csvfile, delimiter=',')
+    index = 0
+    for row in spamreader:
+        #print("CURRENT INDEX: " + str(index) + " IS NOT IN " + str((index in indices)))
+        if (index < 1411):
+            lout.append(row)
+            lasts.append(row[0].strip())
+            firsts.append(row[1].strip())
+            names.append(str(row[1].strip() + "_" + row[0].strip()))
+        index += 1
+       # print (thisrow)
+
+
+index = 0
+loutfinal = []
+
+indices = []
+#for f, l in zip(firsts, lasts):
+currcount = 0
+for imgn in imgnames:
+    index = 0
+    for name in names:
+        
+        if (name in imgn):
+            print("NAME " + name + " IS IN IMG " + imgn + " AT INDEX " + str(index))
+            print("STATS: " + str(lout[index][-4:]))
+            loutfinal.append([imgn] + lout[index][-4:])
+            
+            #print("LOUTFINAL: " + str(loutfinal))
+            indices.append(index)
+            break
+        
+
+        if (f in imgn) and (l in imgn):
+            print("INDEX OF " + f + " " + l + ": " + str(index))
+            #print("TEST: " + str(lout[index]))
+            #loutfinal.append(lout[index])
+
+       
+        index += 1
+    
+   
+
+
+
+
+print("How many indices? " + str(len(loutfinal)))
+
+with open('train_label.csv','w') as csvout:
+    writer = csv.writer(csvout, delimiter=',')
+    writer.writerow(['', 'Recall', 'PositiveRating', 'PerfRatio', 'Impact'])
+    index = 0
+    for i in indices:
+        #print("AT INDEX " + str(index) + ": " + str(loutfinal[index]))
+        #if (i < len(lout) - 1):
+        #print("ROW TO BE WRITTEN: INDEX " + str(i) + " " + str(loutfinal[i]))
+        #print("\tIMGN: " + str(imgnames[index]))
+        writer.writerow(loutfinal[index])
+        index += 1
+
+"""
+#print("Amount of images available: " + str(len(filelist) ))
 #print("Matches found: " + str(found))

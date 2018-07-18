@@ -4,14 +4,14 @@ import pandas as pd
 import numpy as np
 import pickle
 import argparse
-from sklearn.neural_network import MLPClassifier
+from sklearn.neural_network import MLPClassifier, MLPRegressor
 from sklearn.metrics import accuracy_score, roc_auc_score, roc_curve
 from sklearn.model_selection import train_test_split
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--feature', type=str,
-                        default='feature.csv',
+                        default='features.csv',
                         help='path to the the feature file (default: feature.csv)')
     parser.add_argument('--label', type=str,
                         default='label.csv',
@@ -35,16 +35,23 @@ def main():
     idx_train = [path.split('/')[0] in name_train for path in df_feat.index]
     idx_test = [path.split('/')[0] in name_test for path in df_feat.index]
     X_train, Y_train = df_feat[idx_train], df_label[idx_train]
+    #print("X_train: " + str(X_train))
+    #print("Y_train: " + str(Y_train))
     X_test, Y_test = df_feat[idx_test], df_label[idx_test]
+    #print("X_test: " + str(X_test))
     print("start training MLP")
     # train models
-    clf = MLPClassifier(solver='adam',
+    clf = MLPRegressor(solver='adam',
                         hidden_layer_sizes=(128, 128),
                         activation='relu',
                         max_iter = 5000,
                         verbose=True,
                         tol=1e-4)
+    print("Classifier created successfully.")
     clf.fit(X_train, Y_train)
+    
+
+    
     print("saving the trained model to {}".format(args.save_model))
     with open(args.save_model, 'w') as f:
         pickle.dump([clf, df_label.columns.tolist()], f)
