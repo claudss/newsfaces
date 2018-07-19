@@ -11,14 +11,14 @@ from tqdm import tqdm
 import cv2
 import pandas as pd
 # we are only going to use 4 attributes
-COLS = ['Male', 'Asian', 'White', 'Black']
+#COLS = ['Male', 'Asian', 'White', 'Black']
 COLS = ['Recall', 'PositiveRating', 'PerfRatio', 'Impact']
 N_UPSCLAE = 1
 def extract_features(img_path):
     """Exctract 128 dimensional features
     """
     X_img = face_recognition.load_image_file(img_path)
-    locs = face_locations(X_img, number_of_times_to_upsample = N_UPSCLAE, model="cnn")
+    locs = face_locations(X_img, number_of_times_to_upsample = N_UPSCLAE)
     if len(locs) == 0:
         return None, None
     face_encodings = face_recognition.face_encodings(X_img, known_face_locations=locs)
@@ -48,9 +48,8 @@ def draw_attributes(img_path, df):
             #gender = 'Female'
             mem = 'Unmemorable'
 
-        #race = np.argmax(row[1][1:4])
-        #text_showed = "{} {}".format(race, gender)
-        text_showed = mem
+        race = np.argmax(row[1][1:4])
+        text_showed = "{}".format(mem)
 
         cv2.rectangle(img, (left, top), (right, bottom), (0, 0, 255), 2)
         font = cv2.FONT_HERSHEY_DUPLEX
@@ -61,10 +60,9 @@ def draw_attributes(img_path, df):
 
 
 def main():
-    towrite = []
     parser = argparse.ArgumentParser()
     parser.add_argument('--img_dir', type=str,
-                        default='cropped_test/', required = True,
+                        default='test/', required = True,
                         help='input image directory (default: test/)')
     parser.add_argument('--output_dir', type=str,
                         default='results/',
@@ -86,9 +84,7 @@ def main():
 
     print("classifying images in {}".format(input_dir))
     for fname in tqdm(os.listdir(input_dir)):
-        
         img_path = os.path.join(input_dir, fname)
-        #pred, locs = predict_one_image(img_path, clf, labels)
         try:
             pred, locs = predict_one_image(img_path, clf, labels)
         except:
@@ -98,23 +94,12 @@ def main():
         locs = \
             pd.DataFrame(locs, columns = ['top', 'right', 'bottom', 'left'])
         df = pd.concat([pred, locs], axis=1)
-        #print("TEST: " + str(df))
-        towrite.append(pred)
-        """
         img = draw_attributes(img_path, df)
         cv2.imwrite(os.path.join(output_dir, fname), img)
         os.path.splitext(fname)[0]
         output_csvpath = os.path.join(output_dir,
                                       os.path.splitext(fname)[0] + '.csv')
         df.to_csv(output_csvpath, index = False)
-        """
-    
-    for test in towrite:
-        print("TEST: " + str(test))
-    
-    
-        
-        
 
 if __name__ == "__main__":
     main()

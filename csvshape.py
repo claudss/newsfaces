@@ -38,7 +38,7 @@ with open(featfile, 'r') as featread:
 print("AMOUNT OF FILES TO FIND LABELS FOR : " + str(numfiles))
 print("AMOUNT OF ROWS IN FEATROWS: " + str(len(featrows)))
 
-dupimg = imgnames.copy()
+dupimg = imgnames[:]
 
 names = []
 lout = []
@@ -69,7 +69,7 @@ with open('attribs_uncut.csv', 'r') as csvfile:
     
 with open(labelfile,'w') as csvout:
     writer = csv.writer(csvout, delimiter=',')
-    #writer.writerow(['', 'Recall', 'PositiveRating', 'PerfRatio', 'Impact'])
+    writer.writerow(['', 'Recall', 'PositiveRating', 'PerfRatio', 'Impact'])
     index = 0
     for outrow in lout:
         #print("AT INDEX " + str(index) + ": " + str(loutfinal[index]))
@@ -82,6 +82,7 @@ with open(labelfile,'w') as csvout:
 with open(featfile,'w') as featout:
     writer = csv.writer(featout, delimiter=',')
     #writer.writerow(['', 'Recall', 'PositiveRating', 'PerfRatio', 'Impact'])
+    writer.writerow(list(range(128)))
     index = 0
     for outrow in lout:
         #print("AT INDEX " + str(index) + ": " + str(loutfinal[index]))
