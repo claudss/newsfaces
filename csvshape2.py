@@ -20,7 +20,8 @@ for fname in glob.glob("results/*.csv"):
             index += 1
     #print(fname.strip('results/').strip('.csv'))
 
-with open('finalresults.csv', 'w') as resout:
+#with open('predictionresults.csv', 'w') as resout:
+with open('predictionresults_train.csv', 'w') as resout:
     writer = csv.writer(resout, delimiter=',')
     writer.writerow(['', 'Recall', 'PositiveRating', 'PerfRatio', 'Impact'])
     for row in towrite:

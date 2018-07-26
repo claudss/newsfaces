@@ -1,8 +1,0 @@
-1. train a simple model on aligned-faces-matlab folder.
-	-load the data into pytorch
-	-try cropping within the center region
-	-train SIMPLE recognition model to go through these faces
-	-recall, overall positive rating, perf. ratio, impact used as target variables (see talent xlsx in dropbox)
-		-output accuracy is being measured.
-		-randomly split for testing purposes?
-

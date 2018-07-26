@@ -96,7 +96,7 @@ def main():
         df = pd.concat([pred, locs], axis=1)
         img = draw_attributes(img_path, df)
         cv2.imwrite(os.path.join(output_dir, fname), img)
-        print("TEST: " + str(df))
+        #print("TEST: " + str(df))
         #print ("TEST2: " + str(os.path.join(output_dir, fname)))
         
         os.path.splitext(fname)[0]
