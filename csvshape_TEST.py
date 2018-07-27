@@ -10,8 +10,8 @@ import csv
 
 
 imgs = []
-#with open('testf.csv', 'r') as featread:
-with open('train_feature.csv', 'r') as featread:
+with open('testf.csv', 'r') as featread:
+#with open('train_feature.csv', 'r') as featread:
         reader = csv.reader(featread, delimiter=',')
         index = 0
         for row in reader:
@@ -32,6 +32,7 @@ with open('attribs_uncut.csv', 'r') as csvfile:
     index = 0
     count = 0
     for row in spamreader:
+        #if (index < 1411):
         if (index > 1410):
             test = [row[0].strip(), row[1].strip()]
             names.append(test)
@@ -45,7 +46,6 @@ count = 0
 finalrows = []
 for name in names:
  
-    numind = 0
     see = name[1].strip() + "_" + name[0].strip()
     see.replace(" ", "_")
     #print("SEE: " + see)
@@ -61,30 +61,30 @@ for name in names:
                     count += 1
     
 print("FINAL COUNT: " + str(count))
-"""
-#with open('finalfinaltest.csv', 'w') as resout:
-with open('finalfinaltrain.csv', 'w') as resout:
+
+with open('finalfinaltest.csv', 'w') as resout:
+#with open('finalfinaltrain.csv', 'w') as resout:
     writer = csv.writer(resout, delimiter=',')
     writer.writerow(['', 'Recall', 'PositiveRating', 'PerfRatio', 'Impact'])
     for row in finalrows:
         writer.writerow(row)
 
 featrows = []
-#with open('test_feature.csv', 'r') as featread:
-with open('train_feature.csv', 'r') as featread:
+with open('test_feature.csv', 'r') as featread:
+#with open('train_feature.csv', 'r') as featread:
     reader = csv.reader(featread, delimiter=',')
     for row in reader:
         featrows.append(row)
 
-#with open('test_feature.csv', 'w') as featwr:
-with open('train_feature2.csv', 'w') as featwr:
+with open('test_feature.csv', 'w') as featwr:
+#with open('train_feature2.csv', 'w') as featwr:
     writer = csv.writer(featwr, delimiter=',')
-    writer.writerow(list(range(128)))
+    writer.writerow([''] + list(range(128)))
     for fr in featrows:
         for fr2 in finalrows:
             if fr[0] == fr2[0]:
                writer.writerow(fr)
-"""
+
 
 
 

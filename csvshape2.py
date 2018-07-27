@@ -10,6 +10,7 @@ import glob
 import csv
 
 towrite = []
+
 for fname in glob.glob("results/*.csv"):
     with open(fname, 'r') as featread:
         reader = csv.reader(featread, delimiter=',')
@@ -19,10 +20,35 @@ for fname in glob.glob("results/*.csv"):
                 towrite.append([fname.strip('results/').strip('.csv') + '.jpg'] + row[0:4])
             index += 1
     #print(fname.strip('results/').strip('.csv'))
-
-#with open('predictionresults.csv', 'w') as resout:
-with open('predictionresults_train.csv', 'w') as resout:
+towrite.sort()
+with open('predictionresults.csv', 'w') as resout:
+#with open('predictionresults_train.csv', 'w') as resout:
     writer = csv.writer(resout, delimiter=',')
     writer.writerow(['', 'Recall', 'PositiveRating', 'PerfRatio', 'Impact'])
     for row in towrite:
         writer.writerow(row)
+
+"""
+predimgs = []
+for w in towrite:
+    predimgs.append(w[0])
+
+origfinal = []
+with open('finalfinaltrain.csv', 'r') as wrout:
+    reader = csv.reader(wrout, delimiter=',')
+    for row in reader:
+        origfinal.append(row)
+
+finalwr= []
+for name in towrite:
+    if name[0] in predimgs:
+        finalwr.append(name)
+        
+finalwr.sort()
+        
+with open('finalfinaltrain2.csv', 'w') as wrout:
+    writer = csv.writer(wrout, delimiter=',')
+    writer.writerow(['', 'Recall', 'PositiveRating', 'PerfRatio', 'Impact'])
+    for r in finalwr:
+        writer.writerow(r)
+"""

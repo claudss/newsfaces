@@ -23,8 +23,8 @@ trueperfrat = []
 trueimpact = []
 names = []
 
-#with open('finalfinaltest.csv', 'r') as labelread:
-with open('finalfinaltrain.csv', 'r') as labelread:
+with open('finalfinaltest.csv', 'r') as labelread:
+#with open('finalfinaltrain2.csv', 'r') as labelread:
     reader = csv.reader(labelread, delimiter=',')
     index = 0
     for row in reader:
@@ -36,10 +36,10 @@ with open('finalfinaltrain.csv', 'r') as labelread:
             trueperfrat.append(float(row[3]))
             trueimpact.append(float(row[4]))
         index += 1
-#print("TRUE RECALL LOOKS LIKE: " + str(truerecall))
+print("NAME AMOUNT: " + str(len(names)))
 names2 = []
-#with open('predictionresults.csv', 'r') as featread:
-with open('predictionresults_train.csv', 'r') as featread:
+with open('predictionresults.csv', 'r') as featread:
+#with open('predictionresults_train.csv', 'r') as featread:
     reader = csv.reader(featread, delimiter=',')
     index = 0
     count = 0
@@ -53,6 +53,7 @@ with open('predictionresults_train.csv', 'r') as featread:
             count += 1
         index += 1
     print("COUNT: " + str(count))
+    print("INDEX: " + str(index))
     #print(fname.strip('results/').strip('.csv'))
 """
 names2.sort()
@@ -65,7 +66,6 @@ print("RECALL MEAN SQUARED ERROR: " + str(m.mean_squared_error(truerecall, predr
 print("POSITIVE RATING MEAN SQUARED ERROR: " + str(m.mean_squared_error(trueposrat, predposrat)))
 print("PERFORMANCE RATIO MEAN SQUARED ERROR: " + str(m.mean_squared_error(trueperfrat, predperfrat)))
 print("IMPACT MEAN SQUARED ERROR: " + str(m.mean_squared_error(trueimpact, predimpact)))
-
 print("-------------")
 
 
