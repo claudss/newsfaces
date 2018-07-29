@@ -8,6 +8,7 @@ Created on Fri Jul 13 12:21:05 2018
 This file was made to trim the existing results/label csv into manageable columns. Not needed for the main model execution.
 """
 import pandas as pd
+import glob
 import csv
 import os
 import collections
@@ -24,22 +25,86 @@ imgnames = []
 numfiles = 0
 
 featrows = []
-featfile = 'test_feature.csv'
-labelfile = 'test_label.csv'
+featfile = 'cropped_train_feature.csv'
+labelfile = 'cropped_train_label.csv'
 with open(featfile, 'r') as featread:
     reader = csv.reader(featread, delimiter='"')
     for row in reader:
-        thisrow = row[0].split(",")
-        featrows.append(thisrow)
-        imgnames.append(thisrow[0])
-        #print("TESTING NAME: " + thisrow[0])
+        if (numfiles > 0):
+            thisrow = row[0].split(",")
+            featrows.append(thisrow)
+            imgnames.append(thisrow[0])
+            #print("TESTING NAME: " + thisrow[0])
         numfiles += 1
-        
-print("AMOUNT OF FILES TO FIND LABELS FOR : " + str(numfiles))
+
 print("AMOUNT OF ROWS IN FEATROWS: " + str(len(featrows)))
+names = []
+toadd = []
+with open('attribs_uncut.csv', 'r') as csvfile:
+    spamreader = csv.reader(csvfile, delimiter=',')
+    index = 0
+    count = 0
+    for row in spamreader:
+        if (index < 1411):
+        #if (index < 1410):
+            test = [row[0].strip(), row[1].strip()]
+            
+            names.append(test)
+            test2 = [row[2].strip(), row[3].strip(), row[4].strip(), row[5].strip()]
+            #print("TEST2: " + str(test2))
+            toadd.append(row)
+        index += 1
 
-dupimg = imgnames[:]
+dupnames = imgnames[:]
+count = 0
+finalrows = []
+for name in names:
+ 
+    see = name[1].strip() + "_" + name[0].strip()
+    see.replace(" ", "_")
+    #print("SEE: " + see)
+    for img in imgnames:
+        if see in img:
+            for tr in toadd:
+                thistest = (tr[1].strip() + "_" + tr[0].strip())
+                if see == thistest:
+                    #print(see + " is in " + str(tr))
+                    newrow = [img] + tr[-4:]
+                    finalrows.append(newrow)
+                    #print("NEW ROW: " + str([img] + tr[-4:]))
+                    count += 1
+                    toadd.remove(tr)
+    
+#print("FINAL COUNT OF AVAILABLE ROWS: " + str(len(finalrows)))
 
+finalrows.sort()
+with open('cropped_train_label.csv', 'w') as resout:
+#with open('finalfinaltrain.csv', 'w') as resout:
+    writer = csv.writer(resout, delimiter=',')
+    writer.writerow(['', 'Recall', 'PositiveRating', 'PerfRatio', 'Impact'])
+    for row in finalrows:
+        writer.writerow(row)
+
+featrows = []
+with open('cropped_train_feature.csv', 'r') as featread:
+#with open('train_feature.csv', 'r') as featread:
+    reader = csv.reader(featread, delimiter=',')
+    for row in reader:
+        featrows.append(row)
+
+
+
+with open('cropped_train_feature2.csv', 'w') as featwr:
+#with open('train_feature2.csv', 'w') as featwr:
+    writer = csv.writer(featwr, delimiter=',')
+    writer.writerow([''] + list(range(128)))
+    for fr in featrows:
+        for fr2 in finalrows:
+            if fr[0] == fr2[0]:
+               writer.writerow(fr)
+
+
+"""
 names = []
 lout = []
 with open('attribs_uncut.csv', 'r') as csvfile:
@@ -93,7 +158,7 @@ with open(featfile,'w') as featout:
             if outrow[0] == row[0]:
                 writer.writerow(row)
         #index += 1
-
+"""
     
     
 """

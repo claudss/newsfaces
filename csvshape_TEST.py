@@ -57,10 +57,12 @@ for name in names:
                     print(see + " is in " + str(tr))
                     newrow = [img] + tr[-4:]
                     finalrows.append(newrow)
-                    #print("NEW ROW: " + str([img] + tr[-4:]))
+                    print("NEW ROW: " + str([img] + tr[-4:]))
                     count += 1
     
 print("FINAL COUNT: " + str(count))
+
+finalrows.sort()
 
 with open('finalfinaltest.csv', 'w') as resout:
 #with open('finalfinaltrain.csv', 'w') as resout:
@@ -70,11 +72,13 @@ with open('finalfinaltest.csv', 'w') as resout:
         writer.writerow(row)
 
 featrows = []
-with open('test_feature.csv', 'r') as featread:
+with open('testf.csv', 'r') as featread:
 #with open('train_feature.csv', 'r') as featread:
     reader = csv.reader(featread, delimiter=',')
     for row in reader:
         featrows.append(row)
+
+
 
 with open('test_feature.csv', 'w') as featwr:
 #with open('train_feature2.csv', 'w') as featwr:

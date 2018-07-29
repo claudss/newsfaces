@@ -44,7 +44,6 @@ with open('predictionresults.csv', 'r') as featread:
     index = 0
     count = 0
     for row in reader:
-        names2.append(row[0])
         if (index > 0 and row[0] in names):
             predrecall.append(float(row[1]))
             predposrat.append(float(row[2]))
