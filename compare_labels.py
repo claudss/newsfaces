@@ -23,7 +23,7 @@ trueperfrat = []
 trueimpact = []
 names = []
 
-with open('finalfinaltest.csv', 'r') as labelread:
+with open('cropped_test_label.csv', 'r') as labelread:
 #with open('finalfinaltrain2.csv', 'r') as labelread:
     reader = csv.reader(labelread, delimiter=',')
     index = 0

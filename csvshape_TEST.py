@@ -10,7 +10,7 @@ import csv
 
 
 imgs = []
-with open('testf.csv', 'r') as featread:
+with open('cropped_test_feature.csv', 'r') as featread:
 #with open('train_feature.csv', 'r') as featread:
         reader = csv.reader(featread, delimiter=',')
         index = 0
@@ -23,7 +23,7 @@ with open('testf.csv', 'r') as featread:
     #print(fname.strip('results/').strip('.csv'))
     
 imgs.sort()
-    
+
 names = []
 numbers = []
 toadd = []
@@ -41,7 +41,8 @@ with open('attribs_uncut.csv', 'r') as csvfile:
             numbers.append(test2)
             toadd.append(row)
         index += 1
-        
+
+
 count = 0
 finalrows = []
 for name in names:
@@ -64,7 +65,7 @@ print("FINAL COUNT: " + str(count))
 
 finalrows.sort()
 
-with open('finalfinaltest.csv', 'w') as resout:
+with open('cropped_test_label.csv', 'w') as resout:
 #with open('finalfinaltrain.csv', 'w') as resout:
     writer = csv.writer(resout, delimiter=',')
     writer.writerow(['', 'Recall', 'PositiveRating', 'PerfRatio', 'Impact'])
@@ -72,7 +73,7 @@ with open('finalfinaltest.csv', 'w') as resout:
         writer.writerow(row)
 
 featrows = []
-with open('testf.csv', 'r') as featread:
+with open('cropped_test_feature.csv', 'r') as featread:
 #with open('train_feature.csv', 'r') as featread:
     reader = csv.reader(featread, delimiter=',')
     for row in reader:
@@ -80,7 +81,7 @@ with open('testf.csv', 'r') as featread:
 
 
 
-with open('test_feature.csv', 'w') as featwr:
+with open('cropped_test_feature2.csv', 'w') as featwr:
 #with open('train_feature2.csv', 'w') as featwr:
     writer = csv.writer(featwr, delimiter=',')
     writer.writerow([''] + list(range(128)))
