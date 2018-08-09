@@ -12,7 +12,7 @@ import cv2
 import pandas as pd
 # we are only going to use 4 attributes
 #COLS = ['Male', 'Asian', 'White', 'Black']
-COLS = ['Recall', 'PositiveRating', 'PerfRatio', 'Impact']
+COLS = ['Recall', 'PositiveRating', 'PerfRatio', 'Impact',]
 N_UPSCLAE = 1
 def extract_features(img_path):
     """Exctract 128 dimensional features
@@ -48,7 +48,6 @@ def draw_attributes(img_path, df):
             #gender = 'Female'
             mem = 'Unmemorable'
 
-        race = np.argmax(row[1][1:4])
         text_showed = "{}".format(mem)
 
         cv2.rectangle(img, (left, top), (right, bottom), (0, 0, 255), 2)

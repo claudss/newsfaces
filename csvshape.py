@@ -12,6 +12,7 @@ import glob
 import csv
 import os
 import collections
+import numpy as np
 imagepath = "cropped_train/"
 filelist = os.listdir(imagepath)
 filelist.sort()
@@ -27,6 +28,7 @@ numfiles = 0
 featrows = []
 featfile = 'cropped_train_feature.csv'
 labelfile = 'cropped_train_label.csv'
+"""
 with open(featfile, 'r') as featread:
     reader = csv.reader(featread, delimiter='"')
     for row in reader:
@@ -85,15 +87,67 @@ with open('cropped_train_label.csv', 'w') as resout:
     for row in finalrows:
         writer.writerow(row)
 
+"""
+
 featrows = []
-with open('cropped_train_feature.csv', 'r') as featread:
+with open('cropped_test_feature2.csv', 'r') as featread:
+#with open('cropped_train_feature3.csv', 'r') as featread:
 #with open('train_feature.csv', 'r') as featread:
     reader = csv.reader(featread, delimiter=',')
     for row in reader:
         featrows.append(row)
 
+genfeats = []
+labelrows = []
+#with open('cropped_train-new.csv', 'r') as labelread:
+with open('cropped_test-new.csv', 'r') as labelread:
+    reader = csv.reader(labelread, delimiter=',')
+    for row in reader:
+        if (row[5] == "Male"):
+            labelrows.append(row[0:5])
+    
+    
+labs = np.array(labelrows)[:, 0].tolist()
+for fr in featrows:
+    for lr in labs:
+        if (lr in fr):
+            genfeats.append(fr)
+
+#with open('reclassified/male_train_label.csv', 'w') as wrout:
+with open('reclassified/male_test_label.csv', 'w') as wrout:            
+    writer = csv.writer(wrout, delimiter=',')
+    writer.writerow(['', 'Recall', 'PositiveRating', 'PerfRatio', 'Impact'])
+    for row in labelrows:
+        writer.writerow(row)
+        
+        
+
+        
+#with open('reclassified/male_train_feature.csv', 'w') as wrout2:
+with open('reclassified/male_test_feature.csv', 'w') as wrout2:        
+    writer = csv.writer(wrout2, delimiter=',')
+    writer.writerow([''] + list(range(128)))
+    for row in genfeats:
+        writer.writerow(row)
+
+"""        
+newfeat = []
+for lr in labelrows:    
+    for fr in featrows:
+        if (lr[0] == fr[0]):
+            newfeat.append(fr)
+            continue
+
+newfeat.sort()
+with open('cropped_train_feature3.csv', 'w') as featwr:
+    writer = csv.writer(featwr, delimiter=',')
+    for o in newfeat:
+        writer.writerow(o)
+"""
 
 
+
+"""
 with open('cropped_train_feature2.csv', 'w') as featwr:
 #with open('train_feature2.csv', 'w') as featwr:
     writer = csv.writer(featwr, delimiter=',')
@@ -102,7 +156,7 @@ with open('cropped_train_feature2.csv', 'w') as featwr:
         for fr2 in finalrows:
             if fr[0] == fr2[0]:
                writer.writerow(fr)
-
+"""
 
 """
 names = []
