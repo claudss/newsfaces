@@ -11,6 +11,7 @@ import pandas as pd
 import glob
 import csv
 import os
+import shutil
 import collections
 import numpy as np
 imagepath = "cropped_train/"
@@ -99,14 +100,97 @@ with open('cropped_test_feature2.csv', 'r') as featread:
 
 genfeats = []
 labelrows = []
+"""
 #with open('cropped_train-new.csv', 'r') as labelread:
 with open('cropped_test-new.csv', 'r') as labelread:
     reader = csv.reader(labelread, delimiter=',')
     for row in reader:
         if (row[5] == "Male"):
             labelrows.append(row[0:5])
+"""
+with open('cropped_test-new.csv', 'r') as labelread:
+    reader = csv.reader(labelread, delimiter=',')
+    for row in reader:
+        if (row[5] == "Male"):
+            labelrows.append(row[0])
+
+# for every file in reclassified/male_train and reclassified/male_test get their filenames and put them 
+#into a new male only folder
+labelrows = []    
+labelnames = []
+with open('reclassified/male_train_label.csv', 'r') as l:
+    reader = csv.reader(l, delimiter=',')
+    index = 0
+    for row in reader:
+        labelrows.append(row)
+        #labelnames.append(row[0])
+        if (index > 0):
+            labelnames.append(row[0])
+            shutil.copyfile(("reclassified/male_train/" + row[0]), ("reclassified/ALL_male/imgs/" + row[0]))
+            labelnames.append(row[0])
+        index += 1
+
+with open('reclassified/male_test_label.csv', 'r') as l2:
+    reader = csv.reader(l2, delimiter=',')
+    index = 0
+    for row in reader:
+        if (index > 0):
+            labelrows.append(row)
+            labelnames.append(row[0])
+            shutil.copyfile(("reclassified/male_test/" + row[0]), ("reclassified/ALL_male/imgs/" + row[0]))
+            labelnames.append(row[0])
+        index += 1
+
+labelrows.sort()
+labelnames.sort()
+"""
+"""
+with open('reclassified/ALL_male/labels_male.csv', 'w') as labels:
+    writer = csv.writer(labels, delimiter=',')
+    for row in labelrows:
+        writer.writerow(row)
+"""
+"""
+newnames = []
+for fname in glob.glob("aligned-faces-updated/*"):
+    name = fname.split("/")[1]
+    smallname = name.strip(".jpg").strip(".png").strip("-NEW")
+    for l in labelnames:
+        if (smallname in l):
+            newnames.append(name)
+            #shutil.copyfile(fname, "reclassified/ALL_male/imgs_test/" + name)
+            labelnames.remove(l)
+    #print(smallname)
+newnames.sort()
+for n in newnames:
+    print(n)
     
     
+    
+with open('labels_male_final.csv', 'w') as labels2:
+    writer = csv.writer(labels2, delimiter=',')
+    for l in labelrows:
+        print(test)
+    
+    
+    
+    
+    
+    
+"""
+finallabels = []
+for fname in glob.glob("reclassified/ALL_male/imgs/*"):
+    name = fname.split("/")[3]
+    finallabels.append(name)
+
+finallabels.sort()
+
+for f in finallabels:
+    print(f)
+    
+    
+
+
 labs = np.array(labelrows)[:, 0].tolist()
 for fr in featrows:
     for lr in labs:
@@ -129,6 +213,8 @@ with open('reclassified/male_test_feature.csv', 'w') as wrout2:
     writer.writerow([''] + list(range(128)))
     for row in genfeats:
         writer.writerow(row)
+"""
+
 
 """        
 newfeat = []
@@ -147,6 +233,19 @@ with open('cropped_train_feature3.csv', 'w') as featwr:
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 """
 with open('cropped_train_feature2.csv', 'w') as featwr:
 #with open('train_feature2.csv', 'w') as featwr:
@@ -157,6 +256,14 @@ with open('cropped_train_feature2.csv', 'w') as featwr:
             if fr[0] == fr2[0]:
                writer.writerow(fr)
 """
+
+
+
+
+
+
+
+
 
 """
 names = []
@@ -215,6 +322,22 @@ with open(featfile,'w') as featout:
 """
     
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 """
 for f in filelist:
     imgnames.append(f)
@@ -298,5 +421,7 @@ with open('train_label.csv','w') as csvout:
         index += 1
 
 """
+
 #print("Amount of images available: " + str(len(filelist) ))
 #print("Matches found: " + str(found))
+
