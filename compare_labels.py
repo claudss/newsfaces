@@ -23,34 +23,38 @@ trueperfrat = []
 trueimpact = []
 names = []
 
-with open('reclassified/male_test_label.csv', 'r') as labelread:
+#with open('grouped_ID/cropped_test_anchor.csv', 'r') as labelread:
+with open('grouped_ID/anchor_test_label_FEMALE.csv', 'r') as labelread:
 #with open('cropped_test_label.csv', 'r') as labelread:
     reader = csv.reader(labelread, delimiter=',')
     index = 0
     for row in reader:
         if (index > 0):
+            #names.append(row[0].split(".")[0])
             names.append(row[0])
-            
             truerecall.append(float(row[1]))
             trueposrat.append(float(row[2]))
             trueperfrat.append(float(row[3]))
             trueimpact.append(float(row[4]))
         index += 1
-#print("NAME AMOUNT: " + str(len(names)))
+print("NAME AMOUNT: " + str(len(names)))
 names2 = []
-with open('reclassified/male_pred2.csv', 'r') as featread:
+with open('grouped_ID/pred_anchor_FEMALE.csv', 'r') as featread:
+#with open('grouped_ID/pred_anchor2.csv', 'r') as featread:
 #with open('predictionresults.csv', 'r') as featread:
     reader = csv.reader(featread, delimiter=',')
     index = 0
     count = 0
     for row in reader:
-        if (index > 0 and row[0].split("/")[1] in names):
-        #if (index > 0):
+        #if (index > 0 and row[0].split(".")[0] in names):
+        #if (index > 0 and row[0].split("/")[1] in names):
+        #if (index > 0 and row[0] in names):
+        if (index > 0):
             predrecall.append(float(row[1]))
             predposrat.append(float(row[2]))
             predperfrat.append(float(row[3]))
             predimpact.append(float(row[4]))
-            #count += 1
+            count += 1
         index += 1
     print("COUNT: " + str(count))
     print("INDEX: " + str(index))

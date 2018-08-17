@@ -171,8 +171,7 @@ with open('labels_male_final.csv', 'w') as labels2:
     writer = csv.writer(labels2, delimiter=',')
     for l in labelrows:
         print(test)
-    
-    
+     
     
     
     

@@ -25,3 +25,10 @@ python2 train.py --feature features.csv --label label.csv --save_model face_mode
 Classify face attributes in test directory based on the training from above.
 ```bash
 python2 pred.py --img_dir cropped_test/ --model face_model.pkl
+
+
+#### NOTE
+NewsID key:
+WX=1
+Anchor=2
+Traffic=3
